@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { FavoriteModel, IFavorite } from 'database/schema/favorites';
 import { IUser } from 'database/schema/user';
 import { UserService } from 'src/user/user.service';
@@ -9,12 +9,19 @@ export class FavoritesService {
 
   async getFavoriteCategory(userId: string, category: string) {
 
-    const user: IUser = await this.userService.checkUser(userId, "User")
+    try {
+      const user: IUser = await this.userService.checkUser(userId, "User")
+      const favorite: IFavorite[] = await FavoriteModel.find({ "userId": userId, "category": category })
+    }
+    catch (error) {
 
-    const favorite: IFavorite[] = await FavoriteModel.find({ "userId": userId, "category": category })
+      if (error instanceof HttpException) throw error;
 
-
-
+      throw new HttpException(
+        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'An unexpected error occurred ' + error.message, },
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
 
   }
 }
