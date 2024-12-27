@@ -7,13 +7,14 @@ export const connectDB = async (): Promise<Connection> => {
   const password = process.env.MONGO_PASSWORD
   const dbName = process.env.MONGO_DB_NAME
 
+
   if (MDB) {
     return MDB;
   }
 
-  let connectionUrl = "mongodb+srv://ShubhamSP:" + password + "@cluster0.teccyhd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  // connectionUrl = "mongodb+srv://ShubhamSP:VsXLbJWnoxyWA5pa@cluster0.teccyhd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  connectionUrl = `mongodb://localhost:27017/${dbName}`
+
+  let connectionUrl = `mongodb+srv://${userName}:${password}@cluster0.teccyhd.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`
+  // connectionUrl = `mongodb://localhost:27017/${dbName}`
   try {
 
     const db = await mongoose.connect(connectionUrl);
